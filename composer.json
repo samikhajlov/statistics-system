@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "laravelrus/sleepingowl": "4.*@dev",
-        "stevebauman/location": "1.3.*"
+        "stevebauman/location": "1.3.*",
+        "predis/predis": "1.1.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
