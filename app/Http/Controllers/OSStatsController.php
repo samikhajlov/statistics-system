@@ -7,63 +7,80 @@ use Illuminate\Http\Request;
 
 class OSStatsController extends Controller
 {
-    public function setBrowserStats(Request $request, $visited) {
-        $browser = BrowserStatsController::userBrowser($_SERVER["HTTP_USER_AGENT"]);
-      
-        $browserHits = BrowserStatsController::browserHits($browser);
-        $browserIP = BrowserStatsController::browserIP($browser);
-        $browserCookie = BrowserStatsController::browserCookie($browser, $visited);
-        //dd($browserHits, $browserIP, $browserCookie);
+    public function setOSStats(Request $request, $visited) {
+        $os = OSStatsController::getOS($_SERVER["HTTP_USER_AGENT"]);
+        $osHits = OSStatsController::osHits($os);
+        $osIP = OSStatsController::osIP($os);
+        $osCookie = OSStatsController::osCookie($os, $visited);
     }
 
-    public function browserHits($browser) {
-        $browserHitExist = \Redis::command('hget', ['browser_stats_hit', $browser]);
-        if(empty($browserHitExist)) {
-            \Redis::command('hset', ['browser_stats_hit', $browser, 1]);
+    public function osHits($os) {
+        $osHitExist = \Redis::command('hget', ['os_stats_hit', $os]);
+        if(empty($osHitExist)) {
+            \Redis::command('hset', ['os_stats_hit', $os, 1]);
         }
         else {
-            \Redis::command('hincrby', ['browser_stats_hit', $browser, 1]);
+            \Redis::command('hincrby', ['os_stats_hit', $os, 1]);
         }
-        $browserHits = \Redis::command('hgetall', ['browser_stats_hit']);
-        return $browserHits;
+        $osHits = \Redis::command('hgetall', ['os_stats_hit']);
+        return $osHits;
     }
 
-    public function browserIP($browser) {
-        \Redis::command('hset', ['browser_stats_ip', $_SERVER["REMOTE_ADDR"], $browser]);
-        $browserIP = \Redis::command('hgetall', ['browser_stats_ip']);
-        return $browserIP;
+    public function osIP($os) {
+        \Redis::command('hset', ['os_stats_ip', $_SERVER["REMOTE_ADDR"], $os]);
+        $osIP = \Redis::command('hgetall', ['os_stats_ip']);
+        return $osIP;
     }
 
-    public function browserCookie($browser, $visited) {
-        $browserCookieExist = \Redis::command('hget', ['browser_stats_cookie', $browser]);
+    public function osCookie($os, $visited) {
+        $osCookieExist = \Redis::command('hget', ['os_stats_cookie', $os]);
         if(empty($visited)) {
-            if(empty($browserCookieExist)) {
-                \Redis::command('hset', ['browser_stats_cookie', $browser, 1]);
+            if(empty($osCookieExist)) {
+                \Redis::command('hset', ['os_stats_cookie', $os, 1]);
             }
             else {
-                \Redis::command('hincrby', ['browser_stats_cookie', $browser, 1]);
+                \Redis::command('hincrby', ['os_stats_cookie', $os, 1]);
             }
         }
-        $browserCookie = \Redis::command('hgetall', ['browser_stats_cookie']);
-        return $browserCookie;
+        $osCookie = \Redis::command('hgetall', ['os_stats_cookie']);
+        return $osCookie;
     }
 
-    function userBrowser($agent) {
-        preg_match("/(MSIE|Opera|Firefox|Chrome|Version|Opera Mini|Netscape|Konqueror|SeaMonkey|Camino|Minefield|Iceweasel|K-Meleon|Maxthon)(?:\/| )([0-9.]+)/", $agent, $browser_info);
-        list(,$browser,$version) = $browser_info;
-        if (preg_match("/Opera ([0-9.]+)/i", $agent, $opera)) return 'Opera '.$opera[1];
-        if ($browser == 'MSIE') {
-            preg_match("/(Maxthon|Avant Browser|MyIE2)/i", $agent, $ie);
-            if ($ie) return $ie[1].' based on IE '.$version;
-            return 'IE '.$version;
+    function getOS($agent) {
+        $osPlatform    =   "Unknown OS Platform";
+
+        $osArray       =   [
+            '/windows nt 10/i'     =>  'Windows 10',
+            '/windows nt 6.3/i'     =>  'Windows 8.1',
+            '/windows nt 6.2/i'     =>  'Windows 8',
+            '/windows nt 6.1/i'     =>  'Windows 7',
+            '/windows nt 6.0/i'     =>  'Windows Vista',
+            '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+            '/windows nt 5.1/i'     =>  'Windows XP',
+            '/windows xp/i'         =>  'Windows XP',
+            '/windows nt 5.0/i'     =>  'Windows 2000',
+            '/windows me/i'         =>  'Windows ME',
+            '/win98/i'              =>  'Windows 98',
+            '/win95/i'              =>  'Windows 95',
+            '/win16/i'              =>  'Windows 3.11',
+            '/macintosh|mac os x/i' =>  'Mac OS X',
+            '/mac_powerpc/i'        =>  'Mac OS 9',
+            '/linux/i'              =>  'Linux',
+            '/ubuntu/i'             =>  'Ubuntu',
+            '/iphone/i'             =>  'iPhone',
+            '/ipod/i'               =>  'iPod',
+            '/ipad/i'               =>  'iPad',
+            '/android/i'            =>  'Android',
+            '/blackberry/i'         =>  'BlackBerry',
+            '/webos/i'              =>  'Mobile'
+        ];
+
+        foreach ($osArray as $regex => $value) {
+
+            if (preg_match($regex, $agent)) {
+                $osPlatform    =   $value;
+            }
         }
-        if ($browser == 'Firefox') {
-            preg_match("/(Flock|Navigator|Epiphany)\/([0-9.]+)/", $agent, $ff);
-            if ($ff) return $ff[1].' '.$ff[2];
-        }
-        if ($browser == 'Opera' && $version == '9.80') return 'Opera '.substr($agent,-5);
-        if ($browser == 'Version') return 'Safari '.$version;
-        if (!$browser && strpos($agent, 'Gecko')) return 'Browser based on Gecko';
-        return $browser.' '.$version;
+        return $osPlatform;
     }
 }

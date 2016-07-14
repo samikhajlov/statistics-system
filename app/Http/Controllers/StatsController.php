@@ -9,9 +9,13 @@ class StatsController extends Controller
 {
     public function setStats(Request $request) {
         $visited = $request->cookie('visited');
+
         $browser = new BrowserStatsController();
         $browserSetStats = $browser->setBrowserStats($request, $visited);
-        //dd($visited);
+
+        $os = new OSStatsController();
+        $osSetStats = $os->setOSStats($request, $visited);
+
         if(!$visited) {
             $response = new \Illuminate\Http\Response;
             return $response->withCookie(cookie()->forever('visited', 'yes'));
