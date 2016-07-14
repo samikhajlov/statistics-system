@@ -18,7 +18,10 @@ class StatsController extends Controller
 
         $location = new LocationStatsController();
         $locationSetStats = $location->setLocationStats($request, $visited);
-        
+
+        $host = new HostStatsController();
+        $hostSetStats = $host->setHostStats($request, $visited);
+
         if(!$visited) {
             $response = new \Illuminate\Http\Response;
             return $response->withCookie(cookie()->forever('visited', 'yes'));
