@@ -17,9 +17,18 @@ return [
         'title' => 'Statistic System',
         'icon' => 'fa fa-pie-chart',
         'pages' => [
-            (new Page(\App\Model\SystemStats::class))
+            (new Page(\App\Model\BrowserStats::class))
                 ->setIcon('fa fa-circle-o')
                 ->setPriority(0),
-        ]
+            (new Page(\App\Model\OSStats::class))
+                ->setIcon('fa fa-circle-o')
+                ->setPriority(0),
+            (new Page(\App\Model\LocationStats::class))
+                ->setIcon('fa fa-circle-o')
+                ->setPriority(0),
+            (new Page(\App\Model\HostStats::class))
+                ->setIcon('fa fa-circle-o')
+                ->setPriority(0),
+        ],
     ]
 ];

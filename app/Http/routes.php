@@ -21,3 +21,5 @@ Route::get('/test-page', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/browser', 'StatsController@mergeBrowserStats');
