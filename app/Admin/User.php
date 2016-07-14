@@ -1,7 +1,6 @@
 <?php
 use App\User;
 use SleepingOwl\Admin\Model\ModelConfiguration;
-use Illuminate\Support\Facades\Input;
 
 AdminSection::registerModel(User::class, function (ModelConfiguration $model) {
     $model->setTitle('Users');
