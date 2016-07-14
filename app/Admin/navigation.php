@@ -12,5 +12,14 @@ return [
                 ->setIcon('fa fa-user')
                 ->setPriority(0),
         ]
+    ],
+    [
+        'title' => 'Statistic System',
+        'icon' => 'fa fa-pie-chart',
+        'pages' => [
+            (new Page(\App\Model\SystemStats::class))
+                ->setIcon('fa fa-circle-o')
+                ->setPriority(0),
+        ]
     ]
 ];
