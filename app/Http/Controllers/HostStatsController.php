@@ -15,6 +15,17 @@ class HostStatsController extends Controller
             $hostIP = HostStatsController::hostIP($host, $page);
             $hostCookie = HostStatsController::hostCookie($host, $visited, $page);
         }
+        /*
+        may be empty if
+        entered the site URL in browser address bar itself.
+        visited the site by a browser-maintained bookmark.
+        visited the site as first page in the window/tab.
+        switched from a https URL to a http URL.
+        switched from a https URL to a different https URL.
+        has security software installed (antivirus/firewall/etc) which strips the referrer from all requests.
+        is behind a proxy which strips the referrer from all requests.
+        visited the site programmatically (like, curl) without setting the referrer header (searchbots!).
+        */
     }
 
     public function hostHits($host, $page) {
