@@ -14,8 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/test-page', function () {
+    return view('welcome');
+});
 
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
-Route::get('/browser', 'StatsController@setStats');
