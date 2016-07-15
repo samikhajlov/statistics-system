@@ -23,7 +23,7 @@ class SystemStats
         $systemSetStats = $stats->setStats($request);
 
         if(!$visited) {
-            $response = new \Illuminate\Http\Response;
+            $response = $next($request);
             return $response->withCookie(cookie()->forever('visited', 'yes'));
         }
         return $next($request);
