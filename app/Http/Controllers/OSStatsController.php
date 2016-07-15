@@ -9,41 +9,53 @@ class OSStatsController extends Controller
 {
     public function setOSStats(Request $request, $visited, $page) {
         $os = OSStatsController::getOS($_SERVER["HTTP_USER_AGENT"]);
-        $osHits = OSStatsController::osHits($os, $page);
-        $osIP = OSStatsController::osIP($os, $page);
-        $osCookie = OSStatsController::osCookie($os, $visited, $page);
+        OSStatsController::osHits($os, $page);
+        OSStatsController::osIP($os, $page);
+        OSStatsController::osCookie($os, $visited, $page);
     }
 
     public function osHits($os, $page) {
-        $osHitExist = \Redis::command('hget', ['os_stats_hit:'.$page, $os]);
+        $osPageHitExist = \Redis::command('hget', ['os_stats_hit:'.$page, $os]);
+        $osHitExist = \Redis::command('hget', ['os_stats_hit', $os]);
+
         if(empty($osHitExist)) {
+            \Redis::command('hset', ['os_stats_hit', $os, 1]);
+        }
+        else {
+            \Redis::command('hincrby', ['os_stats_hit', $os, 1]);
+        }
+
+        if(empty($osPageHitExist)) {
             \Redis::command('hset', ['os_stats_hit:'.$page, $os, 1]);
         }
         else {
             \Redis::command('hincrby', ['os_stats_hit:'.$page, $os, 1]);
         }
-        $osHits = \Redis::command('hgetall', ['os_stats_hit:'.$page]);
-        return $osHits;
     }
 
     public function osIP($os, $page) {
         \Redis::command('hset', ['os_stats_ip:'.$page, $_SERVER["REMOTE_ADDR"], $os]);
-        $osIP = \Redis::command('hgetall', ['os_stats_ip:'.$page]);
-        return $osIP;
+        \Redis::command('hset', ['os_stats_ip', $_SERVER["REMOTE_ADDR"], $os]);
     }
 
     public function osCookie($os, $visited, $page) {
-        $osCookieExist = \Redis::command('hget', ['os_stats_cookie:'.$page, $os]);
+        $osPageCookieExist = \Redis::command('hget', ['os_stats_cookie:'.$page, $os]);
+        $osCookieExist = \Redis::command('hget', ['os_stats_cookie', $os]);
         if(empty($visited)) {
             if(empty($osCookieExist)) {
+                \Redis::command('hset', ['os_stats_cookie', $os, 1]);
+            }
+            else {
+                \Redis::command('hincrby', ['os_stats_cookie', $os, 1]);
+            }
+
+            if(empty($osPageCookieExist)) {
                 \Redis::command('hset', ['os_stats_cookie:'.$page, $os, 1]);
             }
             else {
                 \Redis::command('hincrby', ['os_stats_cookie:'.$page, $os, 1]);
             }
         }
-        $osCookie = \Redis::command('hgetall', ['os_stats_cookie:'.$page]);
-        return $osCookie;
     }
 
     function getOS($agent) {

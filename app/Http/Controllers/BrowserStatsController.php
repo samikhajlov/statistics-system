@@ -9,41 +9,55 @@ class BrowserStatsController extends Controller
 {
     public function setBrowserStats(Request $request, $visited, $page) {
         $browser = BrowserStatsController::userBrowser($_SERVER["HTTP_USER_AGENT"]);
-        $browserHits = BrowserStatsController::browserHits($browser, $page);
-        $browserIP = BrowserStatsController::browserIP($browser, $page);
-        $browserCookie = BrowserStatsController::browserCookie($browser, $visited, $page);
+        BrowserStatsController::browserHits($browser, $page);
+        BrowserStatsController::browserIP($browser, $page);
+        BrowserStatsController::browserCookie($browser, $visited, $page);
     }
 
     public function browserHits($browser, $page) {
-        $browserHitExist = \Redis::command('hget', ['browser_stats_hit:'.$page, $browser]);
-        if(empty($browserHitExist)) {
+        $browserPageHitExist = \Redis::command('hget', ['browser_stats_hit:'.$page, $browser]);
+        $browserHitExist = \Redis::command('hget', ['browser_stats_hit', $browser]);
+
+        if($browserHitExist) {
+            \Redis::command('hset', ['browser_stats_hit', $browser, 1]);
+        }
+        else {
+            \Redis::command('hincrby', ['browser_stats_hit', $browser, 1]);
+        }
+
+
+        if(empty($browserPageHitExist)) {
             \Redis::command('hset', ['browser_stats_hit:'.$page, $browser, 1]);
         }
         else {
             \Redis::command('hincrby', ['browser_stats_hit:'.$page, $browser, 1]);
         }
-        $browserHits = \Redis::command('hgetall', ['browser_stats_hit:'.$page]);
-        return $browserHits;
     }
 
     public function browserIP($browser, $page) {
         \Redis::command('hset', ['browser_stats_ip:'.$page, $_SERVER["REMOTE_ADDR"], $browser]);
-        $browserIP = \Redis::command('hgetall', ['browser_stats_ip:'.$page]);
-        return $browserIP;
+        \Redis::command('hset', ['browser_stats_ip', $_SERVER["REMOTE_ADDR"], $browser]);
     }
 
     public function browserCookie($browser, $visited, $page) {
-        $browserCookieExist = \Redis::command('hget', ['browser_stats_cookie:'.$page, $browser]);
+        $browserPageCookieExist = \Redis::command('hget', ['browser_stats_cookie:'.$page, $browser]);
+        $browserCookieExist = \Redis::command('hget', ['browser_stats_cookie', $browser]);
+
         if(empty($visited)) {
             if(empty($browserCookieExist)) {
+                \Redis::command('hset', ['browser_stats_cookie', $browser, 1]);
+            }
+            else {
+                \Redis::command('hincrby', ['browser_stats_cookie', $browser, 1]);
+            }
+
+            if(empty($browserPageCookieExist)) {
                 \Redis::command('hset', ['browser_stats_cookie:'.$page, $browser, 1]);
             }
             else {
                 \Redis::command('hincrby', ['browser_stats_cookie:'.$page, $browser, 1]);
             }
         }
-        $browserCookie = \Redis::command('hgetall', ['browser_stats_cookie:'.$page]);
-        return $browserCookie;
     }
 
     function userBrowser($agent) {
