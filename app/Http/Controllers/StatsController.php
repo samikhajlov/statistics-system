@@ -10,18 +10,20 @@ class StatsController extends Controller
     public function setStats(Request $request) {
         $visited = $request->cookie('visited');
         $page = $request->path();
+        $exceptAdmin = strripos($page, 'admin');
+        if($exceptAdmin === false) {
+            $browser = new BrowserStatsController();
+            $browserSetStats = $browser->setBrowserStats($request, $visited, $page);
 
-        $browser = new BrowserStatsController();
-        $browserSetStats = $browser->setBrowserStats($request, $visited, $page);
+            $os = new OSStatsController();
+            $osSetStats = $os->setOSStats($request, $visited, $page);
 
-        $os = new OSStatsController();
-        $osSetStats = $os->setOSStats($request, $visited, $page);
+            $location = new LocationStatsController();
+            $locationSetStats = $location->setLocationStats($request, $visited, $page);
 
-        $location = new LocationStatsController();
-        $locationSetStats = $location->setLocationStats($request, $visited, $page);
-
-        $host = new HostStatsController();
-        $hostSetStats = $host->setHostStats($request, $visited, $page);
+            $host = new HostStatsController();
+            $hostSetStats = $host->setHostStats($request, $visited, $page);
+        }
     }
 
     public function getBrowserStats($page){

@@ -18,7 +18,7 @@ class BrowserStatsController extends Controller
         $browserPageHitExist = \Redis::command('hget', ['browser_stats_hit:'.$page, $browser]);
         $browserHitExist = \Redis::command('hget', ['browser_stats_hit', $browser]);
 
-        if($browserHitExist) {
+        if(empty($browserHitExist)) {
             \Redis::command('hset', ['browser_stats_hit', $browser, 1]);
         }
         else {

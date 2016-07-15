@@ -21,7 +21,6 @@ class SystemStats
         $visited = $request->cookie('visited');
         $stats = new StatsController();
         $systemSetStats = $stats->setStats($request);
-
         if(!$visited) {
             $response = $next($request);
             return $response->withCookie(cookie()->forever('visited', uniqid()));
