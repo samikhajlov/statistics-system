@@ -5,8 +5,9 @@
     }
 </style>
 
-<button type="button" style="opacity:0.5;" id="onePageStats" class="select-statistic-page" disabled>Detail for Page</button>
-<button type="button" id="allSiteStats" class="select-statistic-page">All Site</button>
+<button type="button" style="opacity:0.5;" id="onePageStats" class="select-statistic-page btn btn-primary btn-flat"
+        disabled>Detail for Page</button>
+<button type="button" id="allSiteStats" class="select-statistic-page btn btn-primary btn-flat">All Site</button>
 <div id="page-stats-table">
     <table class="table table-striped">
         <tr>
