@@ -78,7 +78,7 @@ class StatsController extends Controller
         foreach($locationIP as $ip => $location){
             $alllocation[$location]["ip"][$ip] = "catch";
         }
-        foreach($locationCookie as $location => $cookie){
+        foreach($locationCookie as $cookie => $location){
             $alllocation[$location]["cookie"][$cookie] = "catch";
         }
 
