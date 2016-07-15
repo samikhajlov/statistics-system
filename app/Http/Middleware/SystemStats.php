@@ -24,7 +24,7 @@ class SystemStats
 
         if(!$visited) {
             $response = $next($request);
-            return $response->withCookie(cookie()->forever('visited', 'yes'));
+            return $response->withCookie(cookie()->forever('visited', uniqid()));
         }
         return $next($request);
     }

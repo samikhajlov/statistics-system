@@ -37,7 +37,7 @@
                         <td>{{ $subgroup }}</td>
                         <td>{{ isset($arr["hits"]) ? $arr["hits"] : 0 }}</td>
                         <td>{{ isset($arr["ip"]) ? count($arr["ip"]) : 0 }}</td>
-                        <td>{{ isset($arr["cookie"]) ? $arr["cookie"] : 0 }}</td>
+                        <td>{{ isset($arr["cookie"]) ? count($arr["cookie"]) : 0 }}</td>
                     </tr>
                 @endforeach
             @endif
@@ -65,7 +65,7 @@
                         <td>{{ $key }}</td>
                         <td>{{ isset($value["hits"]) ? $value["hits"] : 0 }}</td>
                         <td>{{ isset($value["ip"]) ? count($value["ip"]) : 0 }}</td>
-                        <td>{{ isset($value["cookie"]) ? $value["cookie"] : 0 }}</td>
+                        <td>{{ isset($value["cookie"]) ? count($value["cookie"]) : 0 }}</td>
                     </tr>
             @endif
         @endforeach

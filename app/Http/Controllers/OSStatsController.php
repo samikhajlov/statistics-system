@@ -39,23 +39,8 @@ class OSStatsController extends Controller
     }
 
     public function osCookie($os, $visited, $page) {
-        $osPageCookieExist = \Redis::command('hget', ['os_stats_cookie:'.$page, $os]);
-        $osCookieExist = \Redis::command('hget', ['os_stats_cookie', $os]);
-        if(empty($visited)) {
-            if(empty($osCookieExist)) {
-                \Redis::command('hset', ['os_stats_cookie', $os, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['os_stats_cookie', $os, 1]);
-            }
-
-            if(empty($osPageCookieExist)) {
-                \Redis::command('hset', ['os_stats_cookie:'.$page, $os, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['os_stats_cookie:'.$page, $os, 1]);
-            }
-        }
+        \Redis::command('hset', ['os_stats_cookie:'.$page, $visited, $os]);
+        \Redis::command('hset', ['os_stats_cookie', $visited, $os]);
     }
 
     function getOS($agent) {

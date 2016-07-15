@@ -40,23 +40,7 @@ class LocationStatsController extends Controller
     }
 
     public function locationCookie($locationKey, $visited, $page) {
-        $locationPageCookieExist = \Redis::command('hget', ['location_stats_cookie:'.$page, $locationKey]);
-        $locationCookieExist = \Redis::command('hget', ['location_stats_cookie', $locationKey]);
-
-        if(empty($visited)) {
-            if(empty($locationCookieExist)) {
-                \Redis::command('hset', ['location_stats_cookie', $locationKey, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['location_stats_cookie', $locationKey, 1]);
-            }
-
-            if(empty($locationPageCookieExist)) {
-                \Redis::command('hset', ['location_stats_cookie:'.$page, $locationKey, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['location_stats_cookie:'.$page, $locationKey, 1]);
-            }
-        }
+        \Redis::command('hset', ['location_stats_cookie:'.$page, $visited, $locationKey]);
+        \Redis::command('hset', ['location_stats_cookie', $visited, $locationKey]);
     }
 }

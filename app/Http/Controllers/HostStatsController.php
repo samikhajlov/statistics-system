@@ -53,22 +53,7 @@ class HostStatsController extends Controller
     }
 
     public function hostCookie($host, $visited, $page) {
-        $hostPageCookieExist = \Redis::command('hget', ['host_stats_cookie:'.$page, $host]);
-        $hostCookieExist = \Redis::command('hget', ['host_stats_cookie', $host]);
-        if(empty($visited)) {
-            if(empty($hostCookieExist)) {
-                \Redis::command('hset', ['host_stats_cookie', $host, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['host_stats_cookie', $host, 1]);
-            }
-
-            if(empty($hostPageCookieExist)) {
-                \Redis::command('hset', ['host_stats_cookie:'.$page, $host, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['host_stats_cookie:'.$page, $host, 1]);
-            }
-        }
+        \Redis::command('hset', ['host_stats_cookie:'.$page, $visited, $host]);
+        \Redis::command('hset', ['host_stats_cookie', $visited, $host]);
     }
 }

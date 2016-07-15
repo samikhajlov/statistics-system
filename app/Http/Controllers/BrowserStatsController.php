@@ -40,24 +40,8 @@ class BrowserStatsController extends Controller
     }
 
     public function browserCookie($browser, $visited, $page) {
-        $browserPageCookieExist = \Redis::command('hget', ['browser_stats_cookie:'.$page, $browser]);
-        $browserCookieExist = \Redis::command('hget', ['browser_stats_cookie', $browser]);
-
-        if(empty($visited)) {
-            if(empty($browserCookieExist)) {
-                \Redis::command('hset', ['browser_stats_cookie', $browser, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['browser_stats_cookie', $browser, 1]);
-            }
-
-            if(empty($browserPageCookieExist)) {
-                \Redis::command('hset', ['browser_stats_cookie:'.$page, $browser, 1]);
-            }
-            else {
-                \Redis::command('hincrby', ['browser_stats_cookie:'.$page, $browser, 1]);
-            }
-        }
+        \Redis::command('hset', ['browser_stats_cookie:'.$page, $visited, $browser]);
+        \Redis::command('hset', ['browser_stats_cookie', $visited, $browser]);
     }
 
     function userBrowser($agent) {

@@ -37,8 +37,8 @@ class StatsController extends Controller
         foreach($browserIP as $ip => $browser){
             $allbrowsers[$browser]["ip"][$ip] = "catch";
         }
-        foreach($browserCookie as $browser => $cookie){
-            $allbrowsers[$browser]["cookie"] = $cookie;
+        foreach($browserCookie as $cookie => $browser){
+            $allbrowsers[$browser]["cookie"][$cookie] = "catch";
         }
         return $allbrowsers;
     }
@@ -57,8 +57,8 @@ class StatsController extends Controller
         foreach($osIP as $ip => $os){
             $allOS[$os]["ip"][$ip] = "catch";
         }
-        foreach($osCookie as $os => $cookie){
-            $allOS[$os]["cookie"] = $cookie;
+        foreach($osCookie as $cookie => $os){
+            $allOS[$os]["cookie"][$cookie] = "catch";
         }
 
         return $allOS;
@@ -79,7 +79,7 @@ class StatsController extends Controller
             $alllocation[$location]["ip"][$ip] = "catch";
         }
         foreach($locationCookie as $location => $cookie){
-            $alllocation[$location]["cookie"] = $cookie;
+            $alllocation[$location]["cookie"][$cookie] = "catch";
         }
 
         return $alllocation;
@@ -98,8 +98,8 @@ class StatsController extends Controller
         foreach($hostIP as $ip => $host){
             $allhost[$host]["ip"][$ip] = "catch";
         }
-        foreach($hostCookie as $host => $cookie){
-            $allhost[$host]["cookie"] = $cookie;
+        foreach($hostCookie as $cookie => $host){
+            $allhost[$host]["cookie"][$cookie] = "catch";
         }
         return $allhost;
     }
