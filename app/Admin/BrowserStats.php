@@ -8,6 +8,6 @@ AdminSection::registerModel(BrowserStats::class, function (ModelConfiguration $m
     $model->onDisplay(function () {
         $stats = new \App\Http\Controllers\StatsController();
         $browserStats = $stats->mergeBrowserStats();
-        return view('statsTable', ['stats' => $browserStats, 'type' => 'Browser']);
+        return view('statsTable', ['stats' => $browserStats['pages'], 'allstats' => $browserStats['all'],  'type' => 'Browser']);
     });
 });

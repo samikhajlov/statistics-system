@@ -8,6 +8,6 @@ AdminSection::registerModel(HostStats::class, function (ModelConfiguration $mode
     $model->onDisplay(function () {
         $stats = new \App\Http\Controllers\StatsController();
         $hostStats = $stats->mergeHostStats();
-        return view('statsTable', ['stats' => $hostStats, 'type' => 'Hosts']);
+        return view('statsTable', ['stats' => $hostStats['pages'], 'allstats' => $hostStats['all'], 'type' => 'Hosts']);
     });
 });

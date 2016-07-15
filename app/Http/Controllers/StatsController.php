@@ -30,9 +30,9 @@ class StatsController extends Controller
     }
 
     public function getBrowserStats($page){
-        $browserHits = \Redis::command('hgetall', ['browser_stats_hit:'.$page]);
-        $browserIP = \Redis::command('hgetall', ['browser_stats_ip:'.$page]);
-        $browserCookie = \Redis::command('hgetall', ['browser_stats_cookie:'.$page]);
+        $browserHits = \Redis::command('hgetall', ['browser_stats_hit'.$page]);
+        $browserIP = \Redis::command('hgetall', ['browser_stats_ip'.$page]);
+        $browserCookie = \Redis::command('hgetall', ['browser_stats_cookie'.$page]);
 
         $allbrowsers = [];
 
@@ -50,9 +50,9 @@ class StatsController extends Controller
 
     public function getOSStats($page){
 
-        $osHits = \Redis::command('hgetall', ['os_stats_hit:'.$page]);
-        $osIP = \Redis::command('hgetall', ['os_stats_ip:'.$page]);
-        $osCookie = \Redis::command('hgetall', ['os_stats_cookie:'.$page]);
+        $osHits = \Redis::command('hgetall', ['os_stats_hit'.$page]);
+        $osIP = \Redis::command('hgetall', ['os_stats_ip'.$page]);
+        $osCookie = \Redis::command('hgetall', ['os_stats_cookie'.$page]);
 
         $allOS = [];
 
@@ -71,9 +71,9 @@ class StatsController extends Controller
 
     public function getLocationStats($page){
 
-        $locationHits = \Redis::command('hgetall', ['location_stats_hit:'.$page]);
-        $locationIP = \Redis::command('hgetall', ['location_stats_ip:'.$page]);
-        $locationCookie = \Redis::command('hgetall', ['location_stats_cookie:'.$page]);
+        $locationHits = \Redis::command('hgetall', ['location_stats_hit'.$page]);
+        $locationIP = \Redis::command('hgetall', ['location_stats_ip'.$page]);
+        $locationCookie = \Redis::command('hgetall', ['location_stats_cookie'.$page]);
 
         $alllocation = [];
 
@@ -92,9 +92,9 @@ class StatsController extends Controller
 
     public function getHostStats($page){
 
-        $hostHits = \Redis::command('hgetall', ['host_stats_hit:'.$page]);
-        $hostIP = \Redis::command('hgetall', ['host_stats_ip:'.$page]);
-        $hostCookie = \Redis::command('hgetall', ['host_stats_cookie:'.$page]);
+        $hostHits = \Redis::command('hgetall', ['host_stats_hit'.$page]);
+        $hostIP = \Redis::command('hgetall', ['host_stats_ip'.$page]);
+        $hostCookie = \Redis::command('hgetall', ['host_stats_cookie'.$page]);
         $allhost = [];
 
         foreach($hostHits as $host => $hits){
@@ -112,32 +112,36 @@ class StatsController extends Controller
     public function mergeBrowserStats(){
         $browserStats = [];
         foreach(\Route::getRoutes() as $page){
-            $browserStats[$page->getPath()] = StatsController::getBrowserStats($page->getPath());
+            $browserStats["pages"][$page->getPath()] = StatsController::getBrowserStats(':'.$page->getPath());
         }
+        $browserStats["all"] = StatsController::getBrowserStats("");
         return $browserStats;
     }
 
     public function mergeOSStats(){
         $osStats = [];
         foreach(\Route::getRoutes() as $page){
-            $osStats[$page->getPath()] = StatsController::getOSStats($page->getPath());
+            $osStats["pages"][$page->getPath()] = StatsController::getOSStats(':'.$page->getPath());
         }
+        $osStats["all"] = StatsController::getOSStats("");
         return $osStats;
     }
 
     public function mergeLocationStats(){
         $locationStats = [];
         foreach(\Route::getRoutes() as $page){
-            $locationStats[$page->getPath()] = StatsController::getLocationStats($page->getPath());
+            $locationStats["pages"][$page->getPath()] = StatsController::getLocationStats(':'.$page->getPath());
         }
+        $locationStats["all"] = StatsController::getLocationStats("");
         return $locationStats;
     }
 
     public function mergeHostStats(){
         $hostStats = [];
         foreach(\Route::getRoutes() as $page){
-            $hostStats[$page->getPath()] = StatsController::getHostStats($page->getPath());
+            $hostStats["pages"][$page->getPath()] = StatsController::getHostStats(':'.$page->getPath());
         }
+        $hostStats["all"] = StatsController::getHostStats("");
         return $hostStats;
     }
 

@@ -8,6 +8,6 @@ AdminSection::registerModel(OSStats::class, function (ModelConfiguration $model)
     $model->onDisplay(function () {
         $stats = new \App\Http\Controllers\StatsController();
         $osStats = $stats->mergeOSStats();
-        return view('statsTable', ['stats' => $osStats, 'type' => 'OS']);
+        return view('statsTable', ['stats' => $osStats['pages'], 'allstats' => $osStats['all'], 'type' => 'OS']);
     });
 });
