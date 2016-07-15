@@ -18,8 +18,14 @@ class SystemStats
      */
     public function handle($request, Closure $next)
     {
+        $visited = $request->cookie('visited');
         $stats = new StatsController();
         $systemSetStats = $stats->setStats($request);
+
+        if(!$visited) {
+            $response = new \Illuminate\Http\Response;
+            return $response->withCookie(cookie()->forever('visited', 'yes'));
+        }
         return $next($request);
     }
 }

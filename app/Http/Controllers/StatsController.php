@@ -22,11 +22,6 @@ class StatsController extends Controller
 
         $host = new HostStatsController();
         $hostSetStats = $host->setHostStats($request, $visited, $page);
-
-        if(!$visited) {
-            $response = new \Illuminate\Http\Response;
-            return $response->withCookie(cookie()->forever('visited', 'yes'));
-        }
     }
 
     public function getBrowserStats($page){
